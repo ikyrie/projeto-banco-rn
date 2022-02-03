@@ -1,45 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { StyleSheet, Text, SafeAreaView, TextInput, Button, FlatList, StatusBar } from 'react-native';
 import { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
+import { Memo } from './src/components/Memo';
+import Cabecalho from './src/components/Cabecalho';
 
 export default function App() {
-  const [text, setText] = useState('')
+  const [memos, setMemos] = useState([])
 
-  function storeData(value) {
+  async function restoreData() {
     try {
-      AsyncStorage.setItem('1', value)
-      console.log('Valor guardado: ' + value)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  async function restoreData(key) {
-    try {
-      const value = await AsyncStorage.getItem(key.toString())
-      console.log(value)
+      const chaves = await AsyncStorage.getAllKeys()
+      console.log('Vetor de chaves: ' + chaves)
+      const values = await AsyncStorage.multiGet(chaves)
+      console.log(values)
+      setMemos(values)
     } catch (error) {
       console.log(error)
     }
   }
 
   return (
-    <View style={styles.container}>
-      <Text>Testando</Text>
-      <TextInput onChangeText={newText => setText(newText)} placeholder='Digite aqui algum texto'/>
-      <Button onPress={() => {storeData(text)}} title='Salvar'/>
-      <Button onPress={() => {restoreData('1')}} title='Mostrar'/>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={memos}
+        renderItem={Memo}
+        keyExtractor={memo => memo[0]}
+        style={{backgroundColor: "blue"}}
+        ListHeaderComponent={() => <Cabecalho mostrarMemos={restoreData}/>}
+        />
+      <StatusBar/>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    padding: 16,
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'stretch',
+    justifyContent: 'flex-start',
   },
 });
