@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Text, TextInput, Button } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { adicionaMemo, todosMemos } from "../services/Memos";
 
 export default function Cabecalho({ mostrarMemos }) {
     const [text, setText] = useState('')
@@ -23,6 +24,19 @@ export default function Cabecalho({ mostrarMemos }) {
         }
         return numeroDeEntradas.length + 1
     }
+
+    function criaNotaMock() {
+        const umMemo = {
+            titulo: "Um título",
+            categoria: "Pessoal",
+            texto: "Lorem Ipsum"
+        }
+        adicionaMemo(umMemo)
+    }
+
+    function notas() {
+        todosMemos()
+    }
     
     return (
         <>
@@ -31,6 +45,8 @@ export default function Cabecalho({ mostrarMemos }) {
             <Button onPress={() => {storeData(text)}} title='Salvar'/>
             <Button onPress={() => {mostrarMemos()}} title='Mostrar'/>
             <Button onPress={() => {AsyncStorage.clear()}} title='Limpa AsyncStorage'/>
+            <Button onPress={() => {criaNotaMock()}} title='Cria Nota Mock'/>
+            <Button onPress={() => {notas()}} title='Mostra as notas no console'/>
         </>
     )
         

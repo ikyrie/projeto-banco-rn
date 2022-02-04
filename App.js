@@ -1,11 +1,17 @@
-import { StyleSheet, Text, SafeAreaView, TextInput, Button, FlatList, StatusBar } from 'react-native';
-import { useState } from 'react';
+import { StyleSheet, SafeAreaView, FlatList, StatusBar } from 'react-native';
+import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { Memo } from './src/components/Memo';
 import Cabecalho from './src/components/Cabecalho';
+import { criaTabela } from './src/services/Memos';
 
 export default function App() {
+
+  useEffect(() => {
+    criaTabela()
+  },[])
+
   const [memos, setMemos] = useState([])
 
   async function restoreData() {
