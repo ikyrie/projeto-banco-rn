@@ -1,10 +1,9 @@
 import { StyleSheet, SafeAreaView, FlatList, StatusBar } from 'react-native';
 import { useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { Memo } from './src/components/Memo';
 import Cabecalho from './src/components/Cabecalho';
-import { criaTabela } from './src/services/Memos';
+import { criaTabela, todosMemos } from './src/services/Memos';
 
 export default function App() {
 
@@ -15,24 +14,16 @@ export default function App() {
   const [memos, setMemos] = useState([])
 
   async function restoreData() {
-    try {
-      const chaves = await AsyncStorage.getAllKeys()
-      console.log('Vetor de chaves: ' + chaves)
-      const values = await AsyncStorage.multiGet(chaves)
-      console.log(values)
-      setMemos(values)
-    } catch (error) {
-      console.log(error)
-    }
+      const shti = await todosMemos()
+      setMemos(shti)
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
         data={memos}
-        renderItem={Memo}
-        keyExtractor={memo => memo[0]}
-        style={{backgroundColor: "blue"}}
+        renderItem={(memo) => <Memo {...memo}/>}
+        keyExtractor={memo => memo.id}
         ListHeaderComponent={() => <Cabecalho mostrarMemos={restoreData}/>}
         />
       <StatusBar/>

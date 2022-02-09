@@ -19,12 +19,13 @@ export function adicionaMemo(memo) {
 }
 
 export function todosMemos() {
-    console.log('Mostrei memos')
-    db.transaction((tx) => {
-        tx.executeSql("SELECT * FROM Memos;"),
-        [],
-        (tx, results) => {
-            console.log(results)
-        }
+    return new Promise((resolve, reject) => {
+        console.log('Mostrei memos')
+        db.transaction((tx) => {
+            tx.executeSql("SELECT * FROM Memos;", [], (tx, results) => {
+                resolve(results.rows._array)
+                reject('Caiu')
+            })
+        })
     })
 }
