@@ -1,13 +1,13 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
-export function Memo({item}) {
+export function Memo({item, editaMemo}) {
     return (
-        <View style={style.cartao}>
+        <TouchableOpacity onPress={() => editaMemo(item)} style={style.cartao}>
             <Text style={style.titulo}>{item.titulo}</Text>
             <Text style={style.categoria}>Categoria: {item.categoria}</Text>
             <Text style={style.texto}>{item.texto}</Text>
-        </View>
+        </TouchableOpacity>
     )
 }
 
@@ -20,10 +20,13 @@ const style = StyleSheet.create({
         marginBottom: 8,
         borderTopWidth: 5,
         borderColor: "#ff924f",
-        shadowOffset: {width: 0, height: -10},
-        shadowColor: "#000000",
-        shadowOpacity: 0.5,
-        shadowRadius: 3,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
         elevation: 4,
     },
     titulo: {

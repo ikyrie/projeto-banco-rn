@@ -12,9 +12,15 @@ export function criaTabela() {
 }
 
 export function adicionaMemo(memo) {
-    console.log('Adicionei memo')
-    db.transaction((tx) => {
-        tx.executeSql("INSERT INTO Memos (titulo, categoria, texto) VALUES (?,?,?);",[memo.titulo, memo.categoria, memo.texto])
+    return new Promise((resolve, reject) => {
+        console.log('Adicionei memo')
+        db.transaction((tx) => {
+            tx.executeSql("INSERT INTO Memos (titulo, categoria, texto) VALUES (?,?,?);",[memo.titulo, memo.categoria, memo.texto], (tx, results) => {
+                resolve('Ok')
+                reject('Caiu a adição')
+            })
+        })
+
     })
 }
 
