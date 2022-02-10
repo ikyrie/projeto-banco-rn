@@ -1,9 +1,10 @@
-import { StyleSheet, SafeAreaView, FlatList, StatusBar } from 'react-native';
-import { useState, useEffect } from 'react';
-
-import { Memo } from './src/components/Memo';
+import { useEffect, useState } from 'react';
+import { FlatList, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Cabecalho from './src/components/Cabecalho';
+import { Memo } from './src/components/Memo';
+import MemoEditor from './src/components/MemoEditor';
 import { criaTabela, todosMemos } from './src/services/Memos';
+
 
 export default function App() {
 
@@ -14,8 +15,8 @@ export default function App() {
   const [memos, setMemos] = useState([])
 
   async function restoreData() {
-      const shti = await todosMemos()
-      setMemos(shti)
+      const heehee = await todosMemos()
+      setMemos(heehee)
   }
 
   return (
@@ -26,6 +27,7 @@ export default function App() {
         keyExtractor={memo => memo.id}
         ListHeaderComponent={() => <Cabecalho mostrarMemos={restoreData}/>}
         />
+      <MemoEditor/>
       <StatusBar/>
     </SafeAreaView>
   );
@@ -38,5 +40,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'stretch',
     justifyContent: 'flex-start',
-  },
+  }
 });
