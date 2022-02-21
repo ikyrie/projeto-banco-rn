@@ -1,45 +1,85 @@
-import { StyleSheet, Text, SafeAreaView, TextInput, Button, FlatList, StatusBar } from 'react-native';
-import { useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useEffect, useState } from "react";
+import { FlatList, SafeAreaView, StatusBar, StyleSheet, View } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 
-import { Memo } from './src/components/Memo';
-import Cabecalho from './src/components/Cabecalho';
+import { Nota } from "./src/componentes/Nota";
+import NotaEditor from "./src/componentes/NotaEditor";
+import { criaTabela, todasNotas, filtraPorCategoria } from "./src/services/Notas";
+
 
 export default function App() {
-  const [memos, setMemos] = useState([])
 
-  async function restoreData() {
-    try {
-      const chaves = await AsyncStorage.getAllKeys()
-      console.log('Vetor de chaves: ' + chaves)
-      const values = await AsyncStorage.multiGet(chaves)
-      console.log(values)
-      setMemos(values)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+	useEffect(() => {
+		criaTabela()
+		mostraTodasNotas()
+	},[])
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={memos}
-        renderItem={Memo}
-        keyExtractor={memo => memo[0]}
-        style={{backgroundColor: "blue"}}
-        ListHeaderComponent={() => <Cabecalho mostrarMemos={restoreData}/>}
-        />
-      <StatusBar/>
-    </SafeAreaView>
-  );
+	const [notas, setNotas] = useState([])
+	const [notaSelecionada, setNotaSelecionada] = useState({})
+	const [categoria, setCategoria] = useState("Todos")
+
+	async function mostraTodasNotas() {
+		setNotas(await todasNotas())
+	}
+
+	function atualizaLista() {
+		mostraTodasNotas()
+	}
+
+	async function filtraLista(item) {
+		if(item == "Todos") {
+			mostraTodasNotas()
+		} else {
+			setNotas(await filtraPorCategoria(item))
+		}
+	}
+
+	function editaNota(item) {
+		setNotaSelecionada(item)
+	}
+
+	return (
+		<SafeAreaView style={estilos.container}>
+			<FlatList
+				data={notas}
+				renderItem={(nota) => <Nota {...nota} editaNota={editaNota}/>}
+				keyExtractor={nota => nota.id}
+				ListHeaderComponent={() => {return (
+					<View style={estilos.picker}>
+						<Picker selectedValue={categoria} onValueChange={(itemValue, itemIndex) => {setCategoria(itemValue); filtraLista(itemValue)}}>
+							<Picker.Item label="Todos" value="Todos"/>
+							<Picker.Item label="Pessoal" value="Pessoal"/>
+							<Picker.Item label="Trabalho" value="Trabalho"/>
+							<Picker.Item label="Outros" value="Outros"/>
+						</Picker>
+					</View>
+				)}}
+				showsVerticalScrollIndicator={false}
+				/>
+			<NotaEditor atualizaLista={atualizaLista} notaSelecionada={notaSelecionada} editaNota={editaNota}/>
+			<StatusBar/>
+		</SafeAreaView>
+	);
 }
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'stretch',
-    justifyContent: 'flex-start',
-  },
+const estilos = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "#fff",
+		alignItems: "stretch",
+		justifyContent: "flex-start",
+	},
+    titulo: {
+        fontSize: 24,
+        fontWeight: "600",
+        marginBottom: 12,
+    },
+	picker: {
+		borderWidth: 1,
+		borderRadius: 5,
+		borderColor: "#EEEEEE",
+		marginHorizontal: 16,
+		marginTop: 16,
+		marginBottom: 12,
+	}
 });
