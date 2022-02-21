@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FlatList, SafeAreaView, StatusBar, StyleSheet, View, Text } from "react-native";
+import { FlatList, SafeAreaView, StatusBar, StyleSheet, View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
 import { Nota } from "./src/componentes/Nota";

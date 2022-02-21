@@ -3,7 +3,6 @@ import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView 
 import { Picker } from "@react-native-picker/picker"
 
 import { adicionaNota, atualizaNota, deletaNota } from "../services/Notas"
-import { backgroundColor } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes"
 
 
 export default function NotaEditor({atualizaLista, notaSelecionada, editaNota}) {
@@ -35,6 +34,23 @@ export default function NotaEditor({atualizaLista, notaSelecionada, editaNota}) 
         setCategoria("Pessoal")
         setTexto("")
         editaNota({})
+    }
+
+    function checaESalvaNota() {
+        atualizarNota ? atualizaUmaNota() : montaESalvaNota()
+        limpaModal()
+        setModalVisivel(false)
+    }
+
+    function removeNota() {
+        deletaUmaNota()
+        limpaModal()
+        setModalVisivel(false)
+    }
+
+    function cancelaNota() {
+        setModalVisivel(false)
+        limpaModal()
     }
 
     async function montaESalvaNota() {
@@ -91,18 +107,44 @@ export default function NotaEditor({atualizaLista, notaSelecionada, editaNota}) 
                                 </Picker>
                             </View>
                             <Text style={estilos.modalSubTitulo}>Conteúdo da nota</Text>
-                            <TextInput style={estilos.modalInput} multiline={true} numberOfLines={3} scrollEnabled={true} onChangeText={novoTexto => setTexto(novoTexto)} placeholder="Digite aqui seu lembrete" value={texto}/>
+                            <TextInput 
+                                style={estilos.modalInput}
+                                multiline={true}
+                                numberOfLines={3}
+                                scrollEnabled={true}
+                                onChangeText={novoTexto => setTexto(novoTexto)}
+                                placeholder="Digite aqui seu lembrete"
+                                value={texto}/>
                             <View style={estilos.modalBotoes}>
-                                <TouchableOpacity style={estilos.modalBotaoSalvar} onPress={() => {atualizarNota ? atualizaUmaNota() : montaESalvaNota();limpaModal(); setModalVisivel(false)}}><Text style={estilos.modalBotaoTexto}>Salvar</Text></TouchableOpacity>
-                                {atualizarNota ? <TouchableOpacity style={estilos.modalBotaoDeletar} onPress={() => {deletaUmaNota(); limpaModal(); setModalVisivel(false)}}><Text style={estilos.modalBotaoTexto}>Deletar</Text></TouchableOpacity> : <></>}
-                                <TouchableOpacity style={estilos.modalBotaoCancelar} onPress={() => {setModalVisivel(false); limpaModal()}}><Text style={estilos.modalBotaoTexto}>Cancelar</Text></TouchableOpacity>
+                                <TouchableOpacity
+                                    style={estilos.modalBotaoSalvar}
+                                    onPress={checaESalvaNota}
+                                >
+                                    <Text style={estilos.modalBotaoTexto}>Salvar</Text>
+                                </TouchableOpacity>
+                                {atualizarNota ? 
+                                    <TouchableOpacity
+                                        style={estilos.modalBotaoDeletar}
+                                        onPress={removeNota}
+                                    >
+                                        <Text style={estilos.modalBotaoTexto}>Deletar</Text>
+                                    </TouchableOpacity>
+                                : <></>}
+                                <TouchableOpacity
+                                    style={estilos.modalBotaoCancelar}
+                                    onPress={cancelaNota}
+                                >
+                                    <Text style={estilos.modalBotaoTexto}>Cancelar</Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </ScrollView>
                 </View>
             </Modal>
-            <TouchableOpacity onPress={() => {setModalVisivel(true)}} style={estilos.adicionarMemo}>
-                <Text style={estilos.adicionarMemoTexto}>+</Text>
+            <TouchableOpacity
+                onPress={() => {setModalVisivel(true)}}
+                style={estilos.adicionarMemo}>
+                    <Text style={estilos.adicionarMemoTexto}>+</Text>
             </TouchableOpacity>
         </>
     )
