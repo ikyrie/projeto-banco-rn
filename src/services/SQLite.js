@@ -1,7 +1,7 @@
-import * as SQLite from 'expo-sqlite'
+import * as SQLite from "expo-sqlite"
 
 function openDatabase() {
-    const db = SQLite.openDatabase('db.db')
+    const db = SQLite.openDatabase("db.db")
     return db
 }
 

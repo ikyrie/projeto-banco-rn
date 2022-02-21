@@ -1,15 +1,15 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
-export function Memo({item, editaMemo}) {
-    const categorias = {Pessoal: "#FF924F", Outros: "#000", Trabalho: "#F00"}
+export function Nota({item, editaNota}) {
+    const categorias = {Pessoal: "#FF924F", Outros: "#00911F", Trabalho: "#2F71EB"}
     const style = styleFunction(categorias[item.categoria])
     
     return (
-        <TouchableOpacity onPress={() => editaMemo(item)} style={style.cartao}>
+        <TouchableOpacity onPress={() => editaNota(item)} style={style.cartao}>
             <Text style={style.titulo}>{item.titulo}</Text>
             <Text style={style.categoria}>Categoria: {item.categoria}</Text>
-            <Text style={style.texto}>{item.texto}</Text>
+            <Text style={style.texto} numberOfLines={5}>{item.texto}</Text>
         </TouchableOpacity>
     )
 }
@@ -20,6 +20,7 @@ const styleFunction = (cor) => StyleSheet.create({
         backgroundColor: "#ffffff",
         paddingVertical: 8,
         paddingHorizontal: 16,
+        marginHorizontal: 16,
         marginBottom: 8,
         borderTopWidth: 5,
         borderColor: cor,
@@ -34,7 +35,7 @@ const styleFunction = (cor) => StyleSheet.create({
     },
     titulo: {
         fontSize: 24,
-        fontWeight: '700',
+        fontWeight: "700",
         marginBottom: 4,
     },
     categoria: {
